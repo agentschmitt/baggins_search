@@ -1,0 +1,12 @@
+## Interface: 20100
+
+## Title: Baggins Search
+## Notes: Simple search inspired by vBagnon
+
+## Author: JASlaughter
+## Version: 1.0
+## X-Category: Inventory
+
+## Dependencies: Baggins
+
+Baggins_Search.lua
