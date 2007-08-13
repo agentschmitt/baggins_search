@@ -99,6 +99,8 @@ function Baggins:Baggins_RefreshBags()
 	BagginsSearch:Search(BagginsSearch_EditBox:GetText())
 end
 
+Baggins:RegisterSignal("Baggins_AllBagsClosed", BagginsSearch.UpdateEditBoxPosition, "BagginsSearch")
+
 Baggins.OnMenuRequest.args.BagginsSearch = {
 	name = "Search Item Fade",
 	type = "range",
