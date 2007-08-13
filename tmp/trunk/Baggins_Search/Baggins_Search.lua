@@ -1,6 +1,11 @@
--- Simple! search inspired by vBagnon
+-- Simple search inspired by vBagnon for Baggins
 
 BagginsSearch = {}
+
+BagginsSearch.revision = tonumber(string.sub("$Revision$", 12, -3))
+BagginsSearch.version = "1.0." .. tostring(BagginsSearch.revision)
+
+local itemName, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemEquipLoc
 function BagginsSearch:Search(search)
     for bagid, bag in ipairs(Baggins.bagframes) do
         for sectionid, section in ipairs(bag.sections) do
@@ -8,16 +13,16 @@ function BagginsSearch:Search(search)
                 if button:IsVisible() then
                 	local link = GetContainerItemLink(button:GetParent():GetID(), button:GetID())
                 	if link then
-						local name = strlower(GetItemInfo(link))
+                		itemName, _, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, _, itemEquipLoc = GetItemInfo(link)
 						if strlen(search) == 0 then
 							button:UnlockHighlight()
 							button:SetAlpha(1)
-						elseif name:find(strlower(search)) then
+						elseif strfind(itemName:lower(), search:lower()) or strfind(itemType:lower(), search:lower()) or strfind(itemSubType:lower(), search:lower()) then
 							button:LockHighlight()
 							button:SetAlpha(1)
 						else
 							button:UnlockHighlight()
-							button:SetAlpha(0.15)
+							button:SetAlpha(0.2)
 						end
 					end
                 end
@@ -61,11 +66,25 @@ local function BagginsSearch_CreateEditBox()
 	background:SetPoint("BOTTOMRIGHT", -4, 4)
 	background:SetGradientAlpha("VERTICAL", 0, 0, 0, 0.9, 0.2, 0.2, 0.2, 0.9)
 
-	editBox:SetScript("OnHide", function() this:SetText("") end)
+	editBox:SetScript("OnHide", function() this:SetText(""); BagginsSearch_Label:Show() end)
 	editBox:SetScript("OnEnterPressed", function() this:ClearFocus() end)
-	editBox:SetScript("OnEscapePressed", function() this:SetText(""); this:ClearFocus() end)
-	editBox:SetScript("OnEditFocusGained", function() this:HighlightText() end)
+	editBox:SetScript("OnEscapePressed", function() this:SetText(""); this:ClearFocus(); BagginsSearch_Label:Show() end)
+	editBox:SetScript("OnEditFocusGained", function() BagginsSearch_Label:Hide(); this:HighlightText() end)
 	editBox:SetScript("OnTextChanged", function() BagginsSearch:Search(this:GetText()) end)
+	editBox:SetScript("OnEnter", function()
+		GameTooltip_SetDefaultAnchor(GameTooltip, this)
+		GameTooltip:SetText("Baggins Search")
+		GameTooltip:AddLine("|c00FFFFFFv" .. BagginsSearch.version .. "|r")
+		GameTooltip:Show()
+		end)
+	editBox:SetScript("OnLeave", function() GameTooltip:Hide() end)
+
+	local label = editBox:CreateFontString("BagginsSearch_Label", "OVERLAY", "GameFontHighlight")
+	label:SetAlpha(0.2)
+	label:SetText("Search")
+	label:SetPoint("TOPLEFT", 8, 0)
+	label:SetPoint("BOTTOMLEFT", -8, 0)
+	label:Show()
 end
 BagginsSearch_CreateEditBox()
 BagginsSearch_CreateEditBox = nil
