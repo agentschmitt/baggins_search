@@ -8,5 +8,6 @@
 ## X-Category: Inventory
 
 ## Dependencies: Baggins
+## SavedVariables: BagginsSearch_Save
 
 Baggins_Search.lua

@@ -1,9 +1,9 @@
 -- Simple search inspired by vBagnon for Baggins
 
 BagginsSearch = {}
-
 BagginsSearch.revision = tonumber(string.sub("$Revision$", 12, -3))
 BagginsSearch.version = "1.0." .. tostring(BagginsSearch.revision)
+BagginsSearch_Save = {}
 
 local itemName, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemEquipLoc
 function BagginsSearch:Search(search)
@@ -22,7 +22,7 @@ function BagginsSearch:Search(search)
 							button:SetAlpha(1)
 						else
 							button:UnlockHighlight()
-							button:SetAlpha(0.2)
+							button:SetAlpha(BagginsSearch_Save.unmatchedAlpha or 0.2)
 						end
 					end
                 end
@@ -69,6 +69,7 @@ local function BagginsSearch_CreateEditBox()
 	editBox:SetScript("OnHide", function() this:SetText(""); BagginsSearch_Label:Show() end)
 	editBox:SetScript("OnEnterPressed", function() this:ClearFocus() end)
 	editBox:SetScript("OnEscapePressed", function() this:SetText(""); this:ClearFocus(); BagginsSearch_Label:Show() end)
+	editBox:SetScript("OnEditFocusGained", function() if IsControlKeyDown() then this:SetText(""); this:ClearFocus(); BagginsSearch_Label:Show() else BagginsSearch_Label:Hide(); this:HighlightText() end end)
 	editBox:SetScript("OnEditFocusGained", function() BagginsSearch_Label:Hide(); this:HighlightText() end)
 	editBox:SetScript("OnTextChanged", function() BagginsSearch:Search(this:GetText()) end)
 	editBox:SetScript("OnEnter", function()
@@ -85,10 +86,11 @@ local function BagginsSearch_CreateEditBox()
 	label:SetPoint("TOPLEFT", 8, 0)
 	label:SetPoint("BOTTOMLEFT", -8, 0)
 	label:Show()
+
+	if not BagginsSearch_Save.unmatchedAlpha then
+		BagginsSearch_Save.unmatchedAlpha = 0.2
+	end
 end
-BagginsSearch_CreateEditBox()
-BagginsSearch_CreateEditBox = nil
-BagginsSearch:UpdateEditBoxPosition()
 
 -- I hate hooks too
 Baggins.BagginsSearch_CloseBag = Baggins.CloseBag
@@ -102,3 +104,22 @@ function Baggins:ReallyLayoutBagFrames()
 	self:BagginsSearch_RLBF()
 	BagginsSearch:UpdateEditBoxPosition()
 end
+
+Baggins.OnMenuRequest.args.BagginsSearch = {
+	name = "Search Item Fade",
+	type = "range",
+	desc = "Set the transparency for unmatched items",
+	order = 200,
+	max = 1,
+	min = 0,
+	step = 0.05,
+	get = function() return BagginsSearch_Save.unmatchedAlpha end,
+	set = function(value)
+		BagginsSearch_Save.unmatchedAlpha = value;
+		BagginsSearch:Search(BagginsSearch_EditBox:GetText())
+	end
+}
+
+BagginsSearch_CreateEditBox()
+BagginsSearch_CreateEditBox = nil
+BagginsSearch:UpdateEditBoxPosition()
