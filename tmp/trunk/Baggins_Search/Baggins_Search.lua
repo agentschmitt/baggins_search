@@ -92,16 +92,11 @@ local function BagginsSearch_CreateEditBox()
 end
 
 -- I hate hooks too
-Baggins.BagginsSearch_CloseBag = Baggins.CloseBag
-function Baggins:CloseBag(bagid)
-	self:BagginsSearch_CloseBag(bagid)
+Baggins.BagginsSearch_BRB = Baggins.Baggins_RefreshBags
+function Baggins:Baggins_RefreshBags()
+	self:BagginsSearch_BRB()
 	BagginsSearch:UpdateEditBoxPosition()
-end
-
-Baggins.BagginsSearch_RLBF = Baggins.ReallyLayoutBagFrames
-function Baggins:ReallyLayoutBagFrames()
-	self:BagginsSearch_RLBF()
-	BagginsSearch:UpdateEditBoxPosition()
+	BagginsSearch:Search(BagginsSearch_EditBox:GetText())
 end
 
 Baggins.OnMenuRequest.args.BagginsSearch = {
@@ -119,6 +114,7 @@ Baggins.OnMenuRequest.args.BagginsSearch = {
 	end
 }
 
+-- Do it
 BagginsSearch_CreateEditBox()
 BagginsSearch_CreateEditBox = nil
 BagginsSearch:UpdateEditBoxPosition()
