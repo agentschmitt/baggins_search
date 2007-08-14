@@ -52,6 +52,7 @@ local function BagginsSearch_CreateEditBox()
 	local editBox = CreateFrame('EditBox', 'BagginsSearch_EditBox', UIParent)
 	editBox:SetWidth(100)
 	editBox:SetHeight(24)
+	editBox:SetScale(Baggins.db.profile.scale)
 
 	editBox:SetFontObject(ChatFontNormal)
 	editBox:SetTextInsets(8, 8, 0, 0)
@@ -97,6 +98,11 @@ function Baggins:Baggins_RefreshBags()
 	self:BagginsSearch_BRB()
 	BagginsSearch:UpdateEditBoxPosition()
 	BagginsSearch:Search(BagginsSearch_EditBox:GetText())
+end
+Baggins.BagginsSearch_UpdateBagScale = Baggins.UpdateBagScale
+function Baggins:UpdateBagScale()
+	self:BagginsSearch_UpdateBagScale()
+	BagginsSearch_EditBox:SetScale(Baggins.db.profile.scale)
 end
 
 Baggins:RegisterSignal("Baggins_AllBagsClosed", BagginsSearch.UpdateEditBoxPosition, "BagginsSearch")
