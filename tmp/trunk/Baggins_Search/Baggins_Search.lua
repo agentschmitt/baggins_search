@@ -1,4 +1,4 @@
--- Simple search inspired by vBagnon for Baggins
+﻿-- Simple search inspired by vBagnon for Baggins
 
 BagginsSearch = {}
 BagginsSearch.revision = tonumber(string.sub("$Revision$", 12, -3))
@@ -17,7 +17,7 @@ function BagginsSearch:Search(search)
 						if strlen(search) == 0 then
 							button:UnlockHighlight()
 							button:SetAlpha(1)
-						elseif strfind(itemName:lower(), search:lower()) or strfind(itemType:lower(), search:lower()) or strfind(itemSubType:lower(), search:lower()) then
+						elseif strfind(itemName:lower(), search:lower(),1,1) or strfind(itemType:lower(), search:lower(),1,1) or strfind(itemSubType:lower(), search:lower(),1,1) then
 							button:LockHighlight()
 							button:SetAlpha(1)
 						else
