@@ -1,10 +1,10 @@
-## Interface: 20400
+## Interface: 30000
 
 ## Title: Baggins Search
 ## Notes: Simple search inspired by vBagnon
 
-## Author: JASlaughter
-## Version: 1.0
+## Author: JASlaughter, Mikk
+## Version: 1.0.@project-revision@
 ## X-Category: Inventory
 
 ## Dependencies: Baggins
