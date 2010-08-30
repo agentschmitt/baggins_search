@@ -53,6 +53,7 @@ local function BagginsSearch_CreateEditBox()
 	editBox:SetWidth(100)
 	editBox:SetHeight(24)
 	editBox:SetScale(Baggins.db.profile.scale)
+	editBox:SetFrameStrata("HIGH")
 
 	editBox:SetFontObject(ChatFontNormal)
 	editBox:SetTextInsets(8, 8, 0, 0)
