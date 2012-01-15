@@ -1,0 +1,13 @@
+## Interface: 40300
+
+## Title: Baggins Search
+## Notes: Simple search inspired by vBagnon
+
+## Author: JASlaughter, Mikk
+## Version: 1.0.@project-revision@
+## X-Category: Inventory
+
+## Dependencies: Baggins
+## SavedVariables: BagginsSearch_Save
+
+Baggins_Search.lua
