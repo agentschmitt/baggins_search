@@ -1,4 +1,11 @@
-﻿-- Simple search inspired by vBagnon for Baggins
+﻿
+-- Did Baggins get upgraded to Ace3 version?
+
+local BagginsAce3 = LibStub and LibStub("AceConfigRegistry-3.0")
+BagginsAce3 = BagginsAce3 and BagginsAce3:GetOptionsTable("Baggins") and true
+
+
+-- Simple search inspired by vBagnon for Baggins
 
 BagginsSearch = {}
 BagginsSearch.revision = tonumber(string.sub("$Revision$", 12, -3))
@@ -22,7 +29,7 @@ function BagginsSearch:Search(search)
 							button:SetAlpha(1)
 						else
 							button:UnlockHighlight()
-							button:SetAlpha(BagginsSearch_Save.unmatchedAlpha or 0.2)
+							button:SetAlpha(tonumber(BagginsSearch_Save.unmatchedAlpha) or 0.2)
 						end
 					end
                 end
@@ -126,6 +133,7 @@ end
 
 Baggins:RegisterSignal("Baggins_AllBagsClosed", BagginsSearch.UpdateEditBoxPosition, "BagginsSearch")
 
+
 Baggins.OnMenuRequest.args.BagginsSearch = {
 	name = "Search Item Fade",
 	type = "range",
@@ -140,6 +148,16 @@ Baggins.OnMenuRequest.args.BagginsSearch = {
 		BagginsSearch:Search(BagginsSearch_EditBox:GetText())
 	end
 }
+
+if BagginsAce3 then
+	Baggins.OnMenuRequest.args.BagginsSearch.set = function(info, value)
+		BagginsSearch_Save.unmatchedAlpha = value;
+		BagginsSearch:Search(BagginsSearch_EditBox:GetText())
+	end
+	Baggins.OnMenuRequest.args.BagginsSearch.isPercent = true
+end
+
+
 
 -- Do it
 BagginsSearch_CreateEditBox()
