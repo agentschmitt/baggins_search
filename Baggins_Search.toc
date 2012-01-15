@@ -1,4 +1,4 @@
-## Interface: 40000
+## Interface: 40300
 
 ## Title: Baggins Search
 ## Notes: Simple search inspired by vBagnon
