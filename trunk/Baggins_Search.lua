@@ -21,6 +21,13 @@ function BagginsSearch:Search(search)
                 	local link = GetContainerItemLink(button:GetParent():GetID(), button:GetID())
                 	if link then
                 		itemName, _, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, _, itemEquipLoc = GetItemInfo(link)
+						if not itemName then
+							-- hack hack hack
+							itemName = string.match(link, "|h%[(.*)%]") or ""
+							-- TODO: should figure out what type of thing this is so we can populate these:
+							itemType = ""
+							itemSubType = ""
+						end
 						if strlen(search) == 0 then
 							button:UnlockHighlight()
 							button:SetAlpha(1)
