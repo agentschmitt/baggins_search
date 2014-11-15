@@ -7,10 +7,33 @@ BagginsAce3 = BagginsAce3 and BagginsAce3:GetOptionsTable("Baggins") and true
 
 -- Simple search inspired by vBagnon for Baggins
 
-BagginsSearch = {}
-BagginsSearch.revision = tonumber(string.sub("$Revision$", 12, -3))
+
+
+-- GLOBALS: GameTooltip, GameTooltip_SetDefaultAnchor
+-- GLOBALS: Baggins, BagginsBag
+-- GLOBALS: BagginsSearch, BagginsSearch_BRB, BagginsSearch_CreateEditBox, BagginsSearch_EditBox
+-- GLOBALS: BagginsSearch_Save, BagginsSearch_UpdateBagScale, BagginsSearch_Label
+-- GLOBALS: C_PetJournal, UIParent, CreateFrame, ChatFontNormal, IsControlKeyDown
+
+local _G = _G
+local ipairs, tonumber, strfind, strsub, strmatch = 
+      ipairs, tonumber, strfind, strsub, strmatch
+local GetItemInfo, GetContainerItemLink = 
+      GetItemInfo, GetContainerItemLink
+	  
+	  
+local BagginsSearch = {}
+_G.BagginsSearch = BagginsSearch
+
+BagginsSearch.revision = tonumber(strsub("$Revision$", 12, -3))
 BagginsSearch.version = "1.0." .. tostring(BagginsSearch.revision)
-BagginsSearch_Save = {}
+
+_G.BagginsSearch_Save = {}	-- savedvars
+
+
+
+
+
 
 local itemName, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, itemEquipLoc
 function BagginsSearch:Search(search)
@@ -20,18 +43,39 @@ function BagginsSearch:Search(search)
                 if button:IsVisible() then
                 	local link = GetContainerItemLink(button:GetParent():GetID(), button:GetID())
                 	if link then
-                		itemName, _, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, _, itemEquipLoc = GetItemInfo(link)
+						
+						-- first, assume that it's an ITEM and try to get stats
+                		local itemName, _, itemRarity, itemLevel, itemMinLevel, itemType, itemSubType, _, itemEquipLoc = GetItemInfo(link)
+						
+						-- no? is it a battlepet then?
+						if not itemName then
+							local speciesID = tonumber(strmatch(link, "battlepet:(-?[%d]+):"))
+							if speciesID then
+								local name,_,petType = C_PetJournal.GetPetInfoBySpeciesID(speciesID)
+								petType = tonumber(petType)
+								if name and petType then
+									itemName = name
+									itemType = _G.TOOLTIP_BATTLE_PET or "Battle Pet"
+									itemSubType = _G["BATTLE_PET_NAME_" .. petType] or _G.PET_TYPE_SUFFIX[petType] or ""
+								end
+								
+							end
+						end
+						
+						-- still no? i have no idea what it is, get a fake name from the link
 						if not itemName then
 							-- hack hack hack
-							itemName = string.match(link, "|h%[(.*)%]") or ""
-							-- TODO: should figure out what type of thing this is so we can populate these:
-							itemType = ""
+							itemName = strmatch(link, "|h%[(.*)%]") or ""
+							itemType = strmatch(link, "|H([^:|]+):") or ""  -- "item", "battlepet", whatever the link type is. (always english unfortunately but we DO NOT KNOW WHAT IT IS so can't be helped)
 							itemSubType = ""
 						end
-						if strlen(search) == 0 then
+						
+						if #search == 0 then
 							button:UnlockHighlight()
 							button:SetAlpha(1)
-						elseif strfind(itemName:lower(), search:lower(),1,1) or strfind(itemType:lower(), search:lower(),1,1) or strfind(itemSubType:lower(), search:lower(),1,1) then
+						elseif strfind(itemName:lower(), search:lower(),1,1) or 
+						       strfind(itemType:lower(), search:lower(),1,1) or 
+							   strfind(itemSubType:lower(), search:lower(),1,1) then
 							button:LockHighlight()
 							button:SetAlpha(1)
 						else
@@ -54,7 +98,7 @@ function BagginsSearch:UpdateEditBoxPosition()
 	if lastBag then
 		BagginsSearch_EditBox:ClearAllPoints()
 		BagginsSearch_EditBox:SetPoint("BOTTOMRIGHT", "BagginsBag"..lastBag, "TOPRIGHT", 0, 0)
-		BagginsSearch_EditBox:SetWidth(getglobal("BagginsBag"..lastBag):GetWidth())
+		BagginsSearch_EditBox:SetWidth(_G["BagginsBag"..lastBag]:GetWidth())
 		BagginsSearch_EditBox:Show()
 	else
 		BagginsSearch_EditBox:Hide()
