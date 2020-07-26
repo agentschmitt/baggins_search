@@ -1,9 +1,9 @@
-## Interface: 60000
+## Interface: 80300
 
 ## Title: Baggins Search
 ## Notes: Simple search inspired by vBagnon
 
-## Author: JASlaughter, Mikk
+## Author: JASlaughter, Mikk, agentschmitt
 ## Version: 1.0.@project-revision@
 ## X-Category: Inventory
 
