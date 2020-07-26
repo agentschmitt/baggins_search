@@ -88,6 +88,7 @@ function BagginsSearch:Search(search)
         end
     end
 end
+
 function BagginsSearch:UpdateEditBoxPosition()
 	local lastBag
 	for bagid, bag in ipairs(Baggins.bagframes) do
@@ -109,12 +110,12 @@ local function BagginsSearch_CreateEditBox()
 	-- Create Baggins Search EditBox
 	local editBox = CreateFrame('EditBox', 'BagginsSearch_EditBox', UIParent)
 	editBox:SetWidth(100)
-	editBox:SetHeight(24)
+	editBox:SetHeight(32)
 	editBox:SetScale(Baggins.db.profile.scale)
 	editBox:SetFrameStrata("HIGH")
 
 	editBox:SetFontObject(ChatFontNormal)
-	editBox:SetTextInsets(8, 8, 0, 0)
+	editBox:SetTextInsets(8, 8, 8, 8)
 	editBox:SetAutoFocus(false)
 
 	editBox:SetBackdrop({edgeFile = "Interface/Tooltips/UI-Tooltip-Border", edgeSize = 16, insets = {left = 2, right = 2, top = 2, bottom = 2}})
@@ -127,35 +128,28 @@ local function BagginsSearch_CreateEditBox()
 	background:SetGradientAlpha("VERTICAL", 0, 0, 0, 0.9, 0.2, 0.2, 0.2, 0.9)
 
 	editBox:SetScript("OnHide", function(self)
-			self:SetText("")
-			BagginsSearch_Label:Show()
-		end)
-	editBox:SetScript("OnEnterPressed", function(self) self:ClearFocus() end)
+		self:SetText("")
+		BagginsSearch_Label:Show()
+	end)
+	editBox:SetScript("OnEnterPressed", function(self)
+		self:ClearFocus()
+	end)
 	editBox:SetScript("OnEscapePressed", function(self)
-			self:SetText("")
-			self:ClearFocus()
-			BagginsSearch_Label:Show()
-		end)
+		self:SetText("")
+		self:ClearFocus()
+		BagginsSearch_Label:Show()
+	end)
 	editBox:SetScript("OnEditFocusGained", function(self)
-			if IsControlKeyDown() then
-				self:SetText("")
-				self:ClearFocus()
-				BagginsSearch_Label:Show()
-			else
-				BagginsSearch_Label:Hide()
-				self:HighlightText()
-			end
-		end)
+		self:HighlightText()
+	end)
 	editBox:SetScript("OnTextChanged", function(self)
-			BagginsSearch:Search(self:GetText())
-		end)
-	editBox:SetScript("OnEnter", function(self)
-			GameTooltip_SetDefaultAnchor(GameTooltip, self)
-			GameTooltip:SetText("Baggins Search")
-			GameTooltip:AddLine("|c00FFFFFFv" .. BagginsSearch.version .. "|r")
-			GameTooltip:Show()
-		end)
-	editBox:SetScript("OnLeave", function() GameTooltip:Hide() end)
+		if (#self:GetText("") > 0) then
+			BagginsSearch_Label:Hide()
+		else
+			BagginsSearch_Label:Show()
+		end
+		BagginsSearch:Search(self:GetText())
+	end)
 
 	local label = editBox:CreateFontString("BagginsSearch_Label", "OVERLAY", "GameFontHighlight")
 	label:SetAlpha(0.2)
