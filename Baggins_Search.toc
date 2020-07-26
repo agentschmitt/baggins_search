@@ -10,4 +10,5 @@
 ## Dependencies: Baggins
 ## SavedVariables: BagginsSearch_Save
 
+locales.lua
 Baggins_Search.lua

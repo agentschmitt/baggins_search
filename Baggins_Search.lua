@@ -1,6 +1,7 @@
-﻿
--- Did Baggins get upgraded to Ace3 version?
+﻿local addonName, addonTable = ...
+local L = addonTable.L
 
+-- Did Baggins get upgraded to Ace3 version?
 local BagginsAce3 = LibStub and LibStub("AceConfigRegistry-3.0")
 BagginsAce3 = BagginsAce3 and BagginsAce3:GetOptionsTable("Baggins") and true
 
@@ -153,7 +154,7 @@ local function BagginsSearch_CreateEditBox()
 
 	local label = editBox:CreateFontString("BagginsSearch_Label", "OVERLAY", "GameFontHighlight")
 	label:SetAlpha(0.2)
-	label:SetText("Search")
+	label:SetText(L["SEARCH"])
 	label:SetPoint("TOPLEFT", 8, 0)
 	label:SetPoint("BOTTOMLEFT", -8, 0)
 	label:Show()
@@ -180,9 +181,9 @@ Baggins:RegisterSignal("Baggins_AllBagsClosed", BagginsSearch.UpdateEditBoxPosit
 
 
 Baggins.OnMenuRequest.args.BagginsSearch = {
-	name = "Search Item Fade",
+	name = L["SEARCH_ITEM_FADE"],
 	type = "range",
-	desc = "Set the transparency for unmatched items",
+	desc = L["SEARCH_ITEM_FADE_DESC"],
 	order = 200,
 	max = 1,
 	min = 0,
