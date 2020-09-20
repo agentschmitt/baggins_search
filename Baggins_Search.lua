@@ -109,7 +109,7 @@ end
 
 local function BagginsSearch_CreateEditBox()
 	-- Create Baggins Search EditBox
-	local editBox = CreateFrame('EditBox', 'BagginsSearch_EditBox', UIParent)
+	local editBox = CreateFrame('EditBox', 'BagginsSearch_EditBox', UIParent, BackdropTemplateMixin and "BackdropTemplate")
 	editBox:SetWidth(100)
 	editBox:SetHeight(32)
 	editBox:SetScale(Baggins.db.profile.scale)
